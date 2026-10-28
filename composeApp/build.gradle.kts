@@ -9,7 +9,10 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
+}
+
+ksp {
+    arg("room.schemaLocation", "schemas")
 }
 
 kotlin {
@@ -33,10 +36,6 @@ kotlin {
     
     jvm("desktop")
 
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
-
     sourceSets {
         val desktopMain by getting
         
@@ -51,7 +50,7 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
