@@ -5,14 +5,14 @@ import com.plcoding.bookpedia.book.domain.Book
 
 fun SearchedBookDto.toBook(): Book {
     return Book(
-        id = id,
+        id = id.substringAfterLast("/"),
         title = title,
         imageUrl = if (coverKey != null) {
             "https://covers.openlibrary.org/b/olid/${coverKey}-L.jpg"
         } else {
             "https://covers.openlibrary.org/b/olid/${coverAlternativeKey}-L.jpg"
         },
-        author = authorNames ?: emptyList(),
+        authors = authorNames ?: emptyList(),
         description = null,
         languages = languages ?: emptyList(),
         firstPublishedYear = firstPublishYear.toString(),
