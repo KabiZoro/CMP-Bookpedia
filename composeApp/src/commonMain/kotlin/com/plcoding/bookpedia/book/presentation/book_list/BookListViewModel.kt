@@ -27,15 +27,17 @@ class BookListViewModel(
 
     private var cachedBooks = emptyList<Book>()
     private var searchJob: Job? = null
+    private var observeFavouriteJob: Job? = null
 
     private var hasLoadedInitialData = false
 
     private val _state = MutableStateFlow(BookListState())
     val state = _state
         .onStart {
-            if (cachedBooks.isEmpty()){
+            if (cachedBooks.isEmpty()) {
                 observerSearchQuery()
             }
+            observeFavouriteBooks()
             if (!hasLoadedInitialData) {
                 /** Load initial data here **/
                 hasLoadedInitialData = true
@@ -69,6 +71,20 @@ class BookListViewModel(
                 }
             }
         }
+    }
+
+    private fun observeFavouriteBooks() {
+        observeFavouriteJob?.cancel()
+        observeFavouriteJob = bookRepository
+            .getFavouriteBooks()
+            .onEach { favouriteBooks ->
+                _state.update {
+                    it.copy(
+                        favouriteBooks = favouriteBooks
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun observerSearchQuery() {
